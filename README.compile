@@ -47,4 +47,22 @@ How to compile cm1:
 
 Questions, comments, suggestions:  send email to gbryan@ucar.edu
 
+To build cm1r20.3 on a Power 9 system with gcc-4.9.3 and MPI:
+- vim src/Makefile
+- Replace line 78 to 82 with the following:
+    #  multiple processors, distributed memory (MPI), GNU compiler
+    FC = mpif90
+    #OPTS = -ffree-form -ffree-line-length-none -O2 -finline-functions
+    OPTS = -O2
+    CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+    DM = -DMPI -Uvector
+- vim src/module_sf_gfdl.F
+- Replace line 1904 with the following:
+    common /random/ junk
+- vim src/solve1.F
+- Replace line 628 with the following:
+    dttmp = mtime
+    if( mtime.gt.1800.0 .and. mod(dttmp,300.0).lt.0.01 )then
 
+To run:
+- Paste the run directory from the original tarball

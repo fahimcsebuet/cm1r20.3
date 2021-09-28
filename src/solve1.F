@@ -625,7 +625,8 @@
           IF( do_adapt_lspg .and. lspgrad.eq.4 )THEN
 !!!            stop 3333
 
-          if( mtime.gt.1800.0 .and. mod(mtime,300.0).lt.0.01 )then
+          dttmp = mtime
+          if( mtime.gt.1800.0 .and. mod(dttmp,300.0).lt.0.01 )then
 
             call get_avg_uvt(uavg,vavg,thavg,cavg,th0,ua,va,tha,ruh,ruf,rvh,rvf)
 

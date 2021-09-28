@@ -1901,7 +1901,7 @@ CONTAINS
       parameter (ia=16807,im=2147483647,am=1./im,iq=127773,ir=2836,   &
      &           ntab=32,ndiv=1+(im-1)/ntab,eps=1.2e-7,rnmx=1.-eps)
       integer j,k,iv(32),iy,junk
-      common /random/ junk,iv,iy
+      common /random/ junk
       data iv /ntab*0/, iy /0/
       if (idum.le.0.or.iy.eq.0) then
          idum=max(-idum,1)

@@ -76,10 +76,11 @@
 #CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
 #-----------------------------------------------------------------------------
 #  multiple processors, distributed memory (MPI), GNU compiler
-#FC = mpif90
+FC = mpif90
 #OPTS = -ffree-form -ffree-line-length-none -O2 -finline-functions
-#CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
-#DM = -DMPI
+OPTS = -O2
+CPP  = cpp -C -P -traditional -Wno-invalid-pp-token -ffreestanding
+DM = -DMPI -Uvector
 #-----------------------------------------------------------------------------
 #  multiple processors, shared memory (OpenMP), GNU compiler
 #FC   = gfortran
