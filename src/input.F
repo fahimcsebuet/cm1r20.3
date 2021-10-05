@@ -198,6 +198,7 @@
       character(len=maxstring) :: string
       character(len=12) :: cm1version
       character(len=maxstring) :: output_path
+      character(len=maxstring) :: restart_path
 
 !-----------------------------------------------------------------------
 
@@ -273,12 +274,12 @@
               output_thbudget,output_qvbudget,                                &
               output_ubudget,output_vbudget,output_wbudget,output_pdcomp
       namelist /param16/                                                      &
-              restart_format,restart_filetype,restart_reset_frqtim,           &
-              restart_file_theta,restart_file_dbz,restart_file_th0,           &
-              restart_file_prs0,restart_file_pi0,restart_file_rho0,           &
-              restart_file_qv0,restart_file_u0,restart_file_v0,               &
-              restart_file_zs,restart_file_zh,restart_file_zf,                &
-              restart_file_diags,restart_use_theta
+              restart_path,restart_format,restart_filetype,                   &
+              restart_reset_frqtim,restart_file_theta,restart_file_dbz,       &
+              restart_file_th0,restart_file_prs0,restart_file_pi0,            &
+              restart_file_rho0,restart_file_qv0,restart_file_u0,             &
+              restart_file_v0,restart_file_zs,restart_file_zh,                &
+              restart_file_zf,restart_file_diags,restart_use_theta
       namelist /param10/                                                      &
               stat_w,stat_wlevs,stat_u,stat_v,stat_rmw,                       &
               stat_pipert,stat_prspert,stat_thpert,stat_q,                    &

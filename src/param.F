@@ -424,6 +424,7 @@
       call MPI_BCAST(output_wbudget,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_pdcomp ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
 
+      call MPI_BCAST(restart_path    ,70,MPI_CHARACTER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(restart_format      ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(restart_filetype    ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(restart_file_theta  ,1,MPI_LOGICAL,0,MPI_COMM_WORLD,ierr)
@@ -4596,6 +4597,7 @@
       if(dowr) write(outfile,*)
 
       if(dowr) write(outfile,*)
+      if(dowr) write(outfile,*) 'restart_path         = ',restart_path
       if(dowr) write(outfile,*) 'restart_format       = ',restart_format
       if(dowr) write(outfile,*) 'restart_filetype     = ',restart_filetype
       if(dowr) write(outfile,*) 'restart_file_theta   = ',restart_file_theta

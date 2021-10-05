@@ -140,7 +140,7 @@
       character(len=8) :: text1
       character(len=6) :: aname
       integer :: i,j,k,n,np,nvar,reqs,orecs,orecu,orecv,orecw,ndum
-      integer :: ncid,time_index
+      integer :: ncid,time_index,n1,flag,restart_path_len
       real, dimension(:), allocatable :: dumx,dumy
 #ifdef MPI
       integer :: proc,index,count,req1,req2,req3,reqp
@@ -150,6 +150,18 @@
 #ifdef NETCDF
       integer :: varid,ncstatus
 #endif
+
+  !-----------------------------------------------------------------------
+  ! get length of restart_path string
+
+    flag=0
+    n1=0
+    do while( flag.eq.0 .and. n1.le.70 )
+      n1=n1+1
+      if( restart_path(n1:n1).eq.' ' .or. restart_path(n1:n1).eq.'.' ) flag=1
+    enddo
+
+    restart_path_len=n1-1
 
 !-----------------------------------------------------------------------
 
@@ -164,8 +176,8 @@
       do i=1,maxstring
         fname(i:i) = ' '
       enddo
-
-      fname = 'cm1rst_x.dat'
+      fname(1:restart_path_len) = restart_path(1:restart_path_len)
+      fname(restart_path_len+1:restart_path_len+12) = 'cm1rst_x.dat'
 
       if(dowr) write(outfile,*)
       if(dowr) write(outfile,*) '  Writing to restart file!'
@@ -174,23 +186,23 @@
       if( myid.eq.0 )  &
       open(unit=50,file=fname,form='unformatted',status='unknown')
 
-      fname = 'cm1rst_s.dat'
+      fname(restart_path_len+1:restart_path_len+12) = 'cm1rst_s.dat'
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=51,file=fname,form='unformatted',access='direct',recl=4*nx*ny)
       orecs = 1
 
-      fname = 'cm1rst_u.dat'
+      fname(restart_path_len+1:restart_path_len+12) = 'cm1rst_u.dat'
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=52,file=fname,form='unformatted',access='direct',recl=4*(nx+1)*ny)
       orecu = 1
 
-      fname = 'cm1rst_v.dat'
+      fname(restart_path_len+1:restart_path_len+12) = 'cm1rst_v.dat'
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=53,file=fname,form='unformatted',access='direct',recl=4*nx*(ny+1))
       orecv = 1
 
 
-      fname = 'cm1rst_w.dat'
+      fname(restart_path_len+1:restart_path_len+12) = 'cm1rst_w.dat'
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=54,file=fname,form='unformatted',access='direct',recl=4*nx*ny)
       orecw = 1
@@ -206,9 +218,9 @@
       do i=1,maxstring
         fname(i:i) = ' '
       enddo
-
-      fname = 'cm1rst_XXXXXX_x.dat'
-      write(fname( 8:13),101) nrst
+      fname(1:restart_path_len) = restart_path(1:restart_path_len)
+      fname(restart_path_len+1:restart_path_len+19) = 'cm1rst_XXXXXX_x.dat'
+      write(fname(restart_path_len+8:restart_path_len+13),101) nrst
 101   format(i6.6)
 
       if(dowr) write(outfile,*)
@@ -218,26 +230,26 @@
       if( myid.eq.0 )  &
       open(unit=50,file=fname,form='unformatted',status='unknown')
 
-      fname = 'cm1rst_XXXXXX_s.dat'
-      write(fname( 8:13),101) nrst
+      fname(restart_path_len+1:restart_path_len+19) = 'cm1rst_XXXXXX_s.dat'
+      write(fname(restart_path_len+8:restart_path_len+13),101) nrst
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=51,file=fname,form='unformatted',access='direct',recl=4*nx*ny)
       orecs = 1
 
-      fname = 'cm1rst_XXXXXX_u.dat'
-      write(fname( 8:13),101) nrst
+      fname(restart_path_len+1:restart_path_len+19) = 'cm1rst_XXXXXX_u.dat'
+      write(fname(restart_path_len+8:restart_path_len+13),101) nrst
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=52,file=fname,form='unformatted',access='direct',recl=4*(nx+1)*ny)
       orecu = 1
 
-      fname = 'cm1rst_XXXXXX_v.dat'
-      write(fname( 8:13),101) nrst
+      fname(restart_path_len+1:restart_path_len+19) = 'cm1rst_XXXXXX_v.dat'
+      write(fname(restart_path_len+8:restart_path_len+13),101) nrst
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=53,file=fname,form='unformatted',access='direct',recl=4*nx*(ny+1))
       orecv = 1
 
-      fname = 'cm1rst_XXXXXX_w.dat'
-      write(fname( 8:13),101) nrst
+      fname(restart_path_len+1:restart_path_len+19) = 'cm1rst_XXXXXX_w.dat'
+      write(fname(restart_path_len+8:restart_path_len+13),101) nrst
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=54,file=fname,form='unformatted',access='direct',recl=4*nx*ny)
       orecw = 1
@@ -254,11 +266,11 @@
       do i=1,maxstring
         fname(i:i) = ' '
       enddo
+      fname(1:restart_path_len) = restart_path(1:restart_path_len)
+      fname(restart_path_len+1:restart_path_len+24) = 'cm1rst_XXXXXX_YYYYYY.dat'
 
-      fname = 'cm1rst_XXXXXX_YYYYYY.dat'
-
-      write(fname( 8:13),102) mynode
-      write(fname(15:20),102) nrst
+      write(fname(restart_path_len+8:restart_path_len+13),102) mynode
+      write(fname(restart_path_len+15:restart_path_len+20),102) nrst
 102   format(i6.6)
 
       if(dowr) write(outfile,*)
@@ -2035,7 +2047,7 @@
       character(len=8) :: text1
       character(len=6) :: aname
       integer :: i,j,k,n,np,nvar,nread,reqs,orecs,orecu,orecv,orecw,ndum
-      integer :: ncid,time_index,old_format
+      integer :: ncid,time_index,old_format,n1,flag,restart_path_len
       double precision, dimension(nbudget,0:numprocs-1) :: sbudget
       double precision, dimension(numq,0:numprocs-1) :: csq,dsq
       real, dimension(:,:), allocatable :: pfoo
@@ -2046,6 +2058,19 @@
 #ifdef NETCDF
       integer :: varid,ncstatus
 #endif
+  !-----------------------------------------------------------------------
+  ! get length of restart_path string
+
+    flag=0
+    n1=0
+    do while( flag.eq.0 .and. n1.le.70 )
+      n1=n1+1
+      if( restart_path(n1:n1).eq.' ' .or. restart_path(n1:n1).eq.'.' ) flag=1
+    enddo
+
+    restart_path_len=n1-1
+
+!-----------------------------------------------------------------------
 
 !-----------------------------------------------------------------------
 
@@ -2062,7 +2087,8 @@
         fname(i:i) = ' '
       enddo
 
-      fname = 'cm1rst_x.dat'
+      fname(1:restart_path_len) = restart_path(1:restart_path_len)
+      fname(restart_path_len+1:restart_path_len+12) = 'cm1rst_x.dat'
 
       if(dowr) write(outfile,*)
       if(dowr) write(outfile,*) '  Reading from restart file!'
@@ -2071,22 +2097,22 @@
       if( myid.eq.0 )  &
       open(unit=50,file=fname,form='unformatted',status='old',err=778)
 
-      fname = 'cm1rst_s.dat'
+      fname(restart_path_len+1:restart_path_len+12) = 'cm1rst_s.dat'
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=51,file=fname,form='unformatted',access='direct',recl=4*nx*ny,status='old',err=778)
       orecs = 1
 
-      fname = 'cm1rst_u.dat'
+      fname(restart_path_len+1:restart_path_len+12) = 'cm1rst_u.dat'
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=52,file=fname,form='unformatted',access='direct',recl=4*(nx+1)*ny,status='old',err=778)
       orecu = 1
 
-      fname = 'cm1rst_v.dat'
+      fname(restart_path_len+1:restart_path_len+12) = 'cm1rst_v.dat'
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=53,file=fname,form='unformatted',access='direct',recl=4*nx*(ny+1),status='old',err=778)
       orecv = 1
 
-      fname = 'cm1rst_w.dat'
+      fname(restart_path_len+1:restart_path_len+12) = 'cm1rst_w.dat'
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=54,file=fname,form='unformatted',access='direct',recl=4*nx*ny,status='old',err=778)
       orecw = 1
@@ -2103,9 +2129,9 @@
       do i=1,maxstring
         fname(i:i) = ' '
       enddo
-
-      fname = 'cm1rst_XXXXXX_x.dat'
-      write(fname( 8:13),101) rstnum
+      fname(1:restart_path_len) = restart_path(1:restart_path_len)
+      fname(restart_path_len+1:restart_path_len+19) = 'cm1rst_XXXXXX_x.dat'
+      write(fname(restart_path_len+8:restart_path_len+13),101) rstnum
 101   format(i6.6)
 
       if(dowr) write(outfile,*)
@@ -2115,26 +2141,26 @@
       if( myid.eq.0 )  &
       open(unit=50,file=fname,form='unformatted',status='old',err=778)
 
-      fname = 'cm1rst_XXXXXX_s.dat'
-      write(fname( 8:13),101) rstnum
+      fname(restart_path_len+1:restart_path_len+19) = 'cm1rst_XXXXXX_s.dat'
+      write(fname(restart_path_len+8:restart_path_len+13),101) rstnum
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=51,file=fname,form='unformatted',access='direct',recl=4*nx*ny,status='old',err=778)
       orecs = 1
 
-      fname = 'cm1rst_XXXXXX_u.dat'
-      write(fname( 8:13),101) rstnum
+      fname(restart_path_len+1:restart_path_len+19) = 'cm1rst_XXXXXX_u.dat'
+      write(fname(restart_path_len+8:restart_path_len+13),101) rstnum
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=52,file=fname,form='unformatted',access='direct',recl=4*(nx+1)*ny,status='old',err=778)
       orecu = 1
 
-      fname = 'cm1rst_XXXXXX_v.dat'
-      write(fname( 8:13),101) rstnum
+      fname(restart_path_len+1:restart_path_len+19) = 'cm1rst_XXXXXX_v.dat'
+      write(fname(restart_path_len+8:restart_path_len+13),101) rstnum
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=53,file=fname,form='unformatted',access='direct',recl=4*nx*(ny+1),status='old',err=778)
       orecv = 1
 
-      fname = 'cm1rst_XXXXXX_w.dat'
-      write(fname( 8:13),101) rstnum
+      fname(restart_path_len+1:restart_path_len+19) = 'cm1rst_XXXXXX_w.dat'
+      write(fname(restart_path_len+8:restart_path_len+13),101) rstnum
       if(dowr) write(outfile,*) '  fname=',fname
       open(unit=54,file=fname,form='unformatted',access='direct',recl=4*nx*ny,status='old',err=778)
       orecw = 1
@@ -2151,11 +2177,11 @@
       do i=1,maxstring
         fname(i:i) = ' '
       enddo
+      fname(1:restart_path_len) = restart_path(1:restart_path_len)
+      fname(restart_path_len+1:restart_path_len+24) = 'cm1rst_XXXXXX_YYYYYY.dat'
 
-      fname = 'cm1rst_XXXXXX_YYYYYY.dat'
-
-      write(fname( 8:13),102) mynode
-      write(fname(15:20),102) rstnum
+      write(fname(restart_path_len+8:restart_path_len+13),102) mynode
+      write(fname(restart_path_len+15:restart_path_len+20),102) rstnum
 102   format(i6.6)
 
       if(dowr) write(outfile,*)

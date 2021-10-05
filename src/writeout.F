@@ -8934,7 +8934,6 @@
     enddo
 
     output_path_len=n-1
-    if( myid.eq.0 ) print *,'  DEBUG:: output_path_len = ',output_path_len
 
   !---------------------------------------------------------------------
 
