@@ -199,6 +199,7 @@
       character(len=12) :: cm1version
       character(len=maxstring) :: output_path
       character(len=maxstring) :: restart_path
+      character(len=maxstring) :: azimavg_path
 
 !-----------------------------------------------------------------------
 
@@ -303,7 +304,7 @@
       namelist /param14/                                                      &
               dodomaindiag,diagfrq
       namelist /param15/                                                      &
-              doazimavg,azimavgfrq,rlen,do_adapt_move,adapt_move_frq
+              doazimavg,azimavg_path,azimavgfrq,rlen,do_adapt_move,adapt_move_frq
 
     CONTAINS
 

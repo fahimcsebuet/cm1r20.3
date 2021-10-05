@@ -530,6 +530,7 @@
       call MPI_BCAST(diagfrq   ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
 
       call MPI_BCAST(doazimavg     ,1,MPI_LOGICAL,0,MPI_COMM_WORLD,ierr)
+      call MPI_BCAST(azimavg_path    ,70,MPI_CHARACTER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(azimavgfrq    ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(rlen          ,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(do_adapt_move ,1,MPI_LOGICAL,0,MPI_COMM_WORLD,ierr)
@@ -8827,6 +8828,7 @@
       !----------
       if(dowr) write(outfile,*)
       if(dowr) write(outfile,*) 'doazimavg    = ',doazimavg
+      if(dowr) write(outfile,*) 'azimavg_path   = ',azimavg_path
       if(dowr) write(outfile,*) 'azimavgfrq   = ',azimavgfrq
       if(dowr) write(outfile,*) 'ddr          = ',ddr
       if(dowr) write(outfile,*) 'rlen         = ',rlen

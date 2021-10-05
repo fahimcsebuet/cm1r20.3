@@ -119,7 +119,7 @@
     !---------------------------------------------------------------------------
 
     integer :: i,j,k,n,nn,nq,nvar,nfile,ntmp,wloopmax
-    integer :: ip,im
+    integer :: ip,im,n1,flag1,azimavg_path_len
     real :: rddr
     character(len=80), dimension(varmax) :: varname,vardesc,varunit
     integer, dimension(varmax) :: varlvls
@@ -183,6 +183,18 @@
     call       getcenter(nstep,mtime,rddr,xh,yh,zh,xfref,yfref,ugr,utmp,vgr,vtmp,pp3d,  &
                          nwritea,icenter,jcenter,xcenter,ycenter)
 
+  !-----------------------------------------------------------------------
+  ! get length of restart_path string
+
+    flag1=0
+    n1=0
+    do while( flag1.eq.0 .and. n1.le.70 )
+      n1=n1+1
+      if( azimavg_path(n1:n1).eq.' ' .or. azimavg_path(n1:n1).eq.'.' ) flag1=1
+    enddo
+
+    azimavg_path_len=n1-1
+
     !---------------------------------------------------------------------------
     ! open file:
 
@@ -195,16 +207,16 @@
         do i=1,maxstring
           string(i:i) = ' '
         enddo
-
-        string = 'cm1out_azimavg_XXXXXX_s.dat'
-        write(string(16:21),151) nwritea
+        string(1:azimavg_path_len) = azimavg_path(1:azimavg_path_len)
+        string(azimavg_path_len+1:azimavg_path_len+27) = 'cm1out_azimavg_XXXXXX_s.dat'
+        write(string(azimavg_path_len+16:azimavg_path_len+21),151) nwritea
         if( myid.eq.0 )then
           print *,string
           open(unit=fnums,file=string,form='unformatted',access='direct',recl=4*icrs)
         endif
 
-        string = 'cm1out_azimavg_XXXXXX_w.dat'
-        write(string(16:21),151) nwritea
+        string(azimavg_path_len+1:azimavg_path_len+27) = 'cm1out_azimavg_XXXXXX_w.dat'
+        write(string(azimavg_path_len+16:azimavg_path_len+21),151) nwritea
         if( myid.eq.0 )then
           print *,string
           open(unit=fnumw,file=string,form='unformatted',access='direct',recl=4*icrs)
