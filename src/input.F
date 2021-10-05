@@ -197,6 +197,7 @@
 
       character(len=maxstring) :: string
       character(len=12) :: cm1version
+      character(len=maxstring) :: output_path
 
 !-----------------------------------------------------------------------
 
@@ -253,7 +254,7 @@
       namelist /param8/ var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,   &
                         var11,var12,var13,var14,var15,var16,var17,var18,var19,var20
       namelist /param9/                                                       &
-              output_format,output_filetype,                                  &
+              output_path,output_format,output_filetype,                      &
               output_interp,                                                  &
               output_rain,output_sws,output_svs,output_sps,output_srs,        &
               output_sgs,output_sus,output_shs,output_coldpool,               &

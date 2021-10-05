@@ -8914,6 +8914,7 @@
     integer, intent(in) :: fnum,nwrite
 
     integer :: i
+    integer :: output_path_len,n,flag
 
     do i=1,maxstring
       string(i:i) = ' '
@@ -8922,8 +8923,22 @@
 100 format(i6.6)
 102 format(i6.6)
 
+  !-----------------------------------------------------------------------
+  ! get length of output_path string
+
+    flag=0
+    n=0
+    do while( flag.eq.0 .and. n.le.70 )
+      n=n+1
+      if( output_path(n:n).eq.' ' .or. output_path(n:n).eq.'.' ) flag=1
+    enddo
+
+    output_path_len=n-1
+    if( myid.eq.0 ) print *,'  DEBUG:: output_path_len = ',output_path_len
+
   !---------------------------------------------------------------------
 
+  string(1:output_path_len) = output_path(1:output_path_len)
     checktype:  &
     IF(     type .eq. 's' )THEN
 
@@ -8940,9 +8955,9 @@
 
             ! one file:
             if(fnum.eq.51)then
-              string = 'cm1out_s.dat'
+              string(output_path_len+1:output_path_len+12) = 'cm1out_s.dat'
             elseif(fnum.eq.71)then
-              string = 'cm1out_i.dat'
+              string(output_path_len+1:output_path_len+12) = 'cm1out_i.dat'
             endif
 
           elseif( output_filetype.eq.2 )then
@@ -8950,11 +8965,11 @@
 
             ! one file per output time:
             if(fnum.eq.51)then
-              string = 'cm1out_XXXXXX_s.dat'
+              string(output_path_len+1:output_path_len+19) = 'cm1out_XXXXXX_s.dat'
             elseif(fnum.eq.71)then
-              string = 'cm1out_XXXXXX_i.dat'
+              string(output_path_len+1:output_path_len+19) = 'cm1out_XXXXXX_i.dat'
             endif
-            write(string(8:13),102) nwrite
+            write(string(output_path_len+8:output_path_len+13),102) nwrite
 
           endif
 
@@ -8969,12 +8984,12 @@
         ELSEIF( output_filetype.eq.3 )THEN
 
           if(fnum.eq.51)then
-            string = 'cm1out_XXXXXX_YYYYYY_s.dat  '
+            string(output_path_len+1:output_path_len+28) = 'cm1out_XXXXXX_YYYYYY_s.dat  '
           elseif(fnum.eq.71)then
-            string = 'cm1out_XXXXXX_YYYYYY_i.dat  '
+            string(output_path_len+1:output_path_len+28) = 'cm1out_XXXXXX_YYYYYY_i.dat  '
           endif
-          write(string( 8:13),100) myid
-          write(string(15:20),100) nwrite
+          write(string(output_path_len+8:output_path_len+13),100) myid
+          write(string(output_path_len+15:output_path_len+20),100) nwrite
 
           if(dowr) write(outfile,*) '  myid,string=',myid,'   ',string
           open(unit=fnum,file=string,                  &
@@ -9007,7 +9022,7 @@
           if( output_filetype.eq.1 )then
 
             ! one file:
-            string = 'cm1out_u.dat'
+            string(output_path_len+1:output_path_len+12) = 'cm1out_u.dat'
 
 
 
@@ -9017,8 +9032,8 @@
 !beh2
 
             ! one file per output time:
-            string = 'cm1out_XXXXXX_u.dat'
-            write(string(8:13),102) nwrite
+            string(output_path_len+1:output_path_len+19) = 'cm1out_XXXXXX_u.dat'
+            write(string(output_path_len+8:output_path_len+13),102) nwrite
 
 
 
@@ -9037,12 +9052,9 @@
         ELSEIF( output_filetype.eq.3 )THEN
 
 
-            string = 'cm1out_XXXXXX_YYYYYY_u.dat  '
-
-
-
-          write(string( 8:13),100) myid
-          write(string(15:20),100) nwrite
+            string(output_path_len+1:output_path_len+28) = 'cm1out_XXXXXX_YYYYYY_u.dat  '
+          write(string(output_path_len+8:output_path_len+13),100) myid
+          write(string(output_path_len+15:output_path_len+20),100) nwrite
 
           if(dowr) write(outfile,*) '  myid,string=',myid,'   ',string
           open(unit=fnum,file=string,                  &
@@ -9075,7 +9087,7 @@
           if( output_filetype.eq.1 )then
 
             ! one file:
-            string = 'cm1out_v.dat'
+            string(output_path_len+1:output_path_len+12) = 'cm1out_v.dat'
 
 
 
@@ -9085,8 +9097,8 @@
 !beh2
 
             ! one file per output time:
-            string = 'cm1out_XXXXXX_v.dat'
-            write(string(8:13),102) nwrite
+            string(output_path_len+1:output_path_len+19) = 'cm1out_XXXXXX_v.dat'
+            write(string(output_path_len+8:output_path_len+13),102) nwrite
 
 
 
@@ -9105,12 +9117,10 @@
         ELSEIF( output_filetype.eq.3 )THEN
 
 
-            string = 'cm1out_XXXXXX_YYYYYY_v.dat  '
+            string(output_path_len+1:output_path_len+28) = 'cm1out_XXXXXX_YYYYYY_v.dat  '
 
-
-
-          write(string( 8:13),100) myid
-          write(string(15:20),100) nwrite
+          write(string(output_path_len+8:output_path_len+13),100) myid
+          write(string(output_path_len+15:output_path_len+20),100) nwrite
 
           if(dowr) write(outfile,*) '  myid,string=',myid,'   ',string
           open(unit=fnum,file=string,                  &
@@ -9140,32 +9150,32 @@
 
           IF( myid.eq.nodemaster )THEN
 
-          if( output_filetype.eq.1 )then
+            if( output_filetype.eq.1 )then
 
-            ! one file:
-            string = 'cm1out_w.dat'
-
-
+              ! one file:
+              string(output_path_len+1:output_path_len+12) = 'cm1out_w.dat'
 
 
 
-          elseif( output_filetype.eq.2 )then
+
+
+            elseif( output_filetype.eq.2 )then
 !beh2
 
-            ! one file per output time:
-            string = 'cm1out_XXXXXX_w.dat'
-            write(string(8:13),102) nwrite
+              ! one file per output time:
+              string(output_path_len+1:output_path_len+19) = 'cm1out_XXXXXX_w.dat'
+              write(string(output_path_len+8:output_path_len+13),102) nwrite
 
 
 
 
 
-          endif
+            endif
 
-          if(dowr) write(outfile,*) '  Opening ',trim(string)
-          open(unit=fnum,file=string,form='unformatted',access='direct',   &
-               recl=(nx*ny*4),status='unknown')
-          openw = .true.
+            if(dowr) write(outfile,*) '  Opening ',trim(string)
+            open(unit=fnum,file=string,form='unformatted',access='direct',   &
+                recl=(nx*ny*4),status='unknown')
+            openw = .true.
 !beh3
 
           ENDIF
@@ -9173,12 +9183,12 @@
         ELSEIF( output_filetype.eq.3 )THEN
 
 
-            string = 'cm1out_XXXXXX_YYYYYY_w.dat  '
+            string(output_path_len+1:output_path_len+28) = 'cm1out_XXXXXX_YYYYYY_w.dat  '
 
 
 
-          write(string( 8:13),100) myid
-          write(string(15:20),100) nwrite
+          write(string(output_path_len+8:output_path_len+13),100) myid
+          write(string(output_path_len+15:output_path_len+20),100) nwrite
 
           if(dowr) write(outfile,*) '  myid,string=',myid,'   ',string
           open(unit=fnum,file=string,                  &

@@ -358,6 +358,7 @@
       call MPI_BCAST(var19    ,1,MPI_REAL   ,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(var20    ,1,MPI_REAL   ,0,MPI_COMM_WORLD,ierr)
 
+      call MPI_BCAST(output_path    ,70,MPI_CHARACTER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_format  ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_filetype,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       call MPI_BCAST(output_interp ,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
@@ -4527,6 +4528,7 @@
       endif
 
       if(dowr) write(outfile,*)
+      if(dowr) write(outfile,*) 'output_path      =',output_path
       if(dowr) write(outfile,*) 'output_format    =',output_format
       if(dowr) write(outfile,*) 'output_filetype  =',output_filetype
       if(dowr) write(outfile,*) 'output_interp    =',output_interp
